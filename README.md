@@ -1,5 +1,7 @@
 # Intel iMac OpenClaw Install
 
+> **How these notes were made:** written from a real install, using OpenClaw’s persistent memory plus my own notes. Some of this was drafted with OpenClaw + Grok 4.5. **It may not be fully accurate.** Treat it as a practical walkthrough that will be corrected as I keep using and testing it — not as perfect documentation.
+
 Private working title for a **generic, shareable** OpenClaw setup guide aimed at less-technical users on **Intel iMacs**.
 
 > **Repo name is temporary.** Change it to something more searchable before making the repository public.
@@ -9,11 +11,11 @@ Private working title for a **generic, shareable** OpenClaw setup guide aimed at
 | **Status** | Private draft |
 | **Audience** | People setting up OpenClaw on an Intel iMac without deep Terminal experience |
 | **Primary guide** | [`docs/INTEL_IMAC_OPENCLAW_SETUP_GUIDE.md`](docs/INTEL_IMAC_OPENCLAW_SETUP_GUIDE.md) |
-| **Tested on** | See disclaimer below |
+| **Tested on** | 2015 Intel iMac, Quad Core, 32 GB RAM — see disclaimer below |
 
 ## Disclaimer — testing status
 
-**This guide has only been tested on a 2015 32 GB Intel iMac.**
+**This guide has only been tested on a 2015 Intel iMac, Quad Core, with 32 GB RAM.**
 
 It has **not** been broadly validated across:
 
@@ -30,13 +32,13 @@ If you are on a different machine and something fails, stop at that stage and ca
 
 A staged install path for:
 
-1. Mac prerequisites (Command Line Tools, Homebrew, Node)
+1. Mac prerequisites (Command Line Tools; Homebrew/Node via installer or rescue path)
 2. OpenClaw local gateway
 3. Workspace files used as **persistent memory**
-4. Obsidian as a browser for that memory
+4. Optional Obsidian as a browser for that memory
 5. Telegram bot access
 6. Discord bot access
-7. Optional Ollama embeddings
+7. Optional Ollama (embeddings / simple local failover when hardware allows)
 8. Optional local operator dashboard (Mission Control)
 9. Cost-control notes so background jobs do not surprise you
 
