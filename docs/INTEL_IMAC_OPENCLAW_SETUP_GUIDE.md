@@ -115,26 +115,39 @@ It **reads files** in the workspace. If something matters, write it down.
 - Fancy multi-agent factories on day one
 - Paid extras you do not need yet
 
-### 1.3 Accounts to create first
+### 1.3 Mac login: local account is enough
 
-Create these in a browser, and store credentials privately:
+You do **not** need an Apple ID to follow this guide.
 
-| Account | Why |
-|---|---|
-| Apple ID | downloads, App Store, developer tools |
-| xAI / Grok account | example cloud chat model provider used below |
-| Telegram account | talk to the bot |
-| Discord account + a private server you control | channel chat with the bot |
-| (Optional) dedicated agent email provider later | skip on day one if overwhelmed |
+A normal **local macOS user account** is the intended baseline:
+
+- full control of the machine
+- no Apple Account sign-in required for OpenClaw, Homebrew, Node, Telegram, or Discord setup
+- you can add an Apple ID later if you ever want App Store, iCloud, or similar services
+
+If macOS offers Apple Account / iCloud during first boot, you can skip those and continue with a local account only.
+
+### 1.4 Accounts that are actually useful for this guide
+
+Create these only as needed, and store credentials privately:
+
+| Account | Required for this guide? | Why |
+|---|---|---|
+| Local Mac user account | Yes | day-to-day admin on the iMac |
+| xAI / Grok account | Yes, for the cloud-model example below | chat model provider |
+| Telegram account | If you want Telegram access | talk to the bot |
+| Discord account + a private server you control | If you want Discord access | channel chat with the bot |
+| Apple ID | **No / optional later** | only if you later want App Store, iCloud, or Apple’s developer download site |
+| Dedicated agent email provider | Optional later | skip on day one if overwhelmed |
 
 Also decide:
 
-- `<MAC_USERNAME>`
+- `<MAC_USERNAME>` (local account short name)
 - whether you have a second large disk/volume (`<STORAGE_VOLUME>`)
   - Ideal later: put workspace + local models there  
   - Fine for starters: keep everything under your home folder
 
-### 1.4 Paths used in this guide
+### 1.5 Paths used in this guide
 
 #### Layout A — Simple (recommended for first-timers)
 
@@ -166,7 +179,7 @@ Set:
 
 Only use Layout B if the volume already exists and reliably mounts.
 
-### 1.5 How to use Terminal safely
+### 1.6 How to use Terminal safely
 
 1. Open **Terminal** (Spotlight: `Cmd + Space`, type `Terminal`, Enter).
 2. Copy **one command at a time**.
@@ -274,17 +287,34 @@ xcode-select --install
 
 ### B2. If the popup never appears, fails, or loops
 
-This is a common obstacle.
+This is a common obstacle. Stay on the local-account path if you can.
 
-**Manual install path:**
+**Try these first (usually no Apple ID):**
+
+1. Reboot and run `xcode-select --install` again
+2. Confirm the Mac has working internet
+3. Run:
+
+```bash
+sudo xcode-select --reset
+xcode-select --install
+```
+
+**Manual package download (optional fallback only):**
+
+Apple’s browser download site (`developer.apple.com/download/all`) typically asks for an **Apple ID**.  
+You do **not** need that for the normal path above.
+
+Use the manual site only if the popup path is completely stuck **and** you are willing to create/use an Apple ID later:
 
 1. Open Safari and sign in at:  
-   <https://developer.apple.com/download/all/>  
-   (free Apple ID is enough)
+   <https://developer.apple.com/download/all/>
 2. Search for: **Command Line Tools for Xcode**
 3. Download a package compatible with **your macOS version**
 4. Open the `.dmg` → run the `.pkg` → finish the installer
 5. Restart Terminal
+
+If you are deliberately keeping the Mac free of Apple ID / Apple Account ties, stop at the local `xcode-select --install` path and get help with that error rather than creating an Apple ID just for this step.
 
 ### B3. Verify
 

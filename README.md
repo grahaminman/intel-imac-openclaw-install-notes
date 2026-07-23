@@ -45,6 +45,7 @@ A staged install path for:
 - Not an official OpenClaw manual
 - Not a hardened multi-user production deployment guide
 - Not a guide that requires OpenCore Legacy Patcher
+- Not a guide that requires an Apple ID (local Mac account is enough; Apple ID is optional later)
 - Not a dump of anyone’s private tokens, server IDs, or personal notes
 
 ## Placeholders
