@@ -9,7 +9,7 @@
 | **Status** | Generic shareable draft |
 | **Hardware focus** | Intel iMac class machines |
 | **OS focus** | Official Apple macOS on a supported Intel iMac preferred; OpenCore possible but not taught here |
-| **Repo working title** | `intel-imac-openclaw-install` (rename before public launch) |
+| **Repo working title** | `intel-imac-openclaw-install-notes` (rename again before public launch if needed) |
 
 ---
 
@@ -1469,7 +1469,7 @@ Optional useful context:
 
 ## 24. Maintainer note for this repository
 
-- Working GitHub name: `intel-imac-openclaw-install`  
+- Working GitHub name: `intel-imac-openclaw-install-notes`  
 - Keep the repo **private** until reviewed  
 - Rename before public release for searchability  
 - Keep examples generic; never commit live tokens or personal server inventories  

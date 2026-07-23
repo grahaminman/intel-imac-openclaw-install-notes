@@ -86,6 +86,6 @@ See [`LICENSE`](LICENSE). Documentation is provided as-is, without warranty.
 
 ## Maintainer notes
 
-- Working title / repo slug: `intel-imac-openclaw-install`
+- Working title / repo slug: `intel-imac-openclaw-install-notes`
 - Rename before public launch to improve discoverability
 - Keep this repo free of live credentials and machine-local private history
