@@ -191,9 +191,9 @@ Set:
 |---|---|---|---|
 | A | Mac basics + updates | Yes | macOS updated, disk space OK |
 | B | Xcode Command Line Tools | Yes | `xcode-select -p` works |
-| C | Homebrew | Yes | `brew --version` works |
-| D | Node.js 22+ | Yes | `node -v` shows v22 or newer |
-| E | OpenClaw install + gateway | Yes | gateway status is running |
+| C | OpenClaw install (Homebrew + Node may come with it) | Yes | `openclaw --version` works; Homebrew + Node present |
+| D | _(reserved / usually skipped)_ | — | Only if you still need a manual Node-only cleanup after C |
+| E | Onboard + gateway | Yes | gateway status is running |
 | F | Workspace + identity files | Yes | core `.md` files exist |
 | G | Cloud model login | Yes | short chat reply works |
 | H | Persistent memory (workspace files) | Yes | memory write/read test passes |
@@ -331,36 +331,73 @@ Expected:
 - [ ] `xcode-select -p` works  
 - [ ] `git --version` works  
 
-**Do not install Homebrew until this stage is green.**
+**Do not start the OpenClaw/Homebrew install until this stage is green.**
 
 ---
 
-## 5. Stage C — Homebrew
+## 5. Stage C — Install OpenClaw (Homebrew + Node may come with it)
+
+### C0. How this stage really works
+
+You need three things eventually:
+
+1. **Homebrew** (package helper on the Mac)  
+2. **Node.js** (runs OpenClaw)  
+3. **OpenClaw** itself  
+
+**Preferred first move:** run the **official OpenClaw installer**. On many Macs it can set up Homebrew and/or Node for you, then finish OpenClaw.
+
+**It may just work end-to-end.**  
+**It may not.** On the tested install, the OpenClaw installer **failed during Homebrew**, Homebrew was installed **manually**, and running the OpenClaw installer **again** then installed Node and finished without further drama.
+
+So:
+
+- manual Homebrew / Node steps are a **rescue path**, not homework you must do in advance  
+- if the installer succeeds first time, skip the rescue sections  
+- if it fails, fix the thing it failed on, then **re-run the installer** before inventing a third method  
+
+### C1. Try the official OpenClaw installer first
+
+```bash
+curl -fsSL https://openclaw.ai/install.sh | bash
+```
+
+- Read on-screen prompts before confirming  
+- Enter your Mac password if asked  
+- Let it finish, or stop cleanly if it errors  
+
+If current docs show a slightly different official install command, prefer the current upstream docs and keep the same idea: **one installer first**.
+
+### C2. Check what you already have
+
+Open a **new** Terminal window and run:
+
+```bash
+brew --version
+node -v
+npm -v
+openclaw --version
+```
+
+Use this table:
+
+| Result | What to do next |
+|---|---|
+| All four commands work | Go to **Stage E** (onboard + gateway) |
+| Failed or stuck on Homebrew / `brew` missing | Do **C3**, then re-run **C1** |
+| `brew` works, but `node` / `openclaw` still missing | Re-run **C1** first; if still stuck, do **C4** |
+| `node` works, only `openclaw` missing | Do **C5** |
+| Command installed but “not found” | Do **C6** (PATH), then re-check |
+
+### C3. Only if needed — install Homebrew manually, then retry OpenClaw
 
 Homebrew is a package manager. On Intel Macs it commonly lives under `/usr/local`.
-
-### C1. Official install
 
 ```bash
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 ```
 
-- Read what it says before confirming  
-- Enter your Mac password if prompted  
-- Let it finish fully
-
-### C2. If the one-liner fails
-
-Try in order:
-
-1. Confirm Command Line Tools again (Stage B)
-2. Retry in a new Terminal window after reboot
-3. Check network access in Safari
-4. Follow the current official manual instructions:  
-   <https://docs.brew.sh/Installation>  
-   (use official docs only)
-
-### C3. Put `brew` on your PATH (Intel Mac)
+Then:
 
 ```bash
 which brew || ls /usr/local/bin/brew
@@ -375,11 +412,16 @@ eval "$(/usr/local/bin/brew shellenv)"
 brew --version
 ```
 
-Close Terminal, reopen it, run `brew --version` again.
+Close Terminal, reopen it, confirm `brew --version` still works.
 
-> **Note:** Apple silicon Homebrew paths differ (`/opt/homebrew`). This guide is Intel-first.
+If the Homebrew installer itself fails, try in order:
 
-### C4. First Homebrew health pass
+1. Confirm Command Line Tools again (Stage B)  
+2. Reboot, new Terminal, retry Homebrew  
+3. Check network in Safari (<https://brew.sh>)  
+4. Official manual docs only: <https://docs.brew.sh/Installation>  
+
+Optional health check once `brew` works:
 
 ```bash
 brew update
@@ -388,24 +430,14 @@ brew doctor
 
 Warnings can be normal. A broken `brew --version` is not.
 
-### C5. Older Intel iMac notes
+**Then re-run the OpenClaw installer (C1).**  
+Do not assume you must hand-install Node next — on the tested path, the second OpenClaw run did Node + OpenClaw after Homebrew was fixed.
 
-- First installs can be slow. Leave them alone.
-- Prefer prebuilt packages when Homebrew offers them.
-- Do not install OpenCore to “fix” Homebrew.
+> **Note:** Apple silicon Homebrew paths differ (`/opt/homebrew`). This guide is Intel-first.
 
-### C6. Checkpoint
+### C4. Only if needed — Node still missing after a good Homebrew + installer retry
 
-- [ ] `brew --version` works in a **new** Terminal window  
-- [ ] `brew update` completes  
-
----
-
-## 6. Stage D — Node.js
-
-OpenClaw needs a current Node. Aim for **Node 22 or newer**.
-
-### D1. Install Node via Homebrew
+OpenClaw needs a current Node (**22+**; newer is fine if current tools give you that).
 
 ```bash
 brew install node
@@ -413,30 +445,33 @@ node -v
 npm -v
 ```
 
-### D2. If Homebrew Node is unsuitable
+If Homebrew Node is unsuitable, use the official macOS installer from <https://nodejs.org/> (current **LTS** is a safe choice), reopen Terminal, and recheck `node -v`.
 
-Use the official macOS installer from <https://nodejs.org/>  
-Prefer current **LTS** unless you know you need another track.
-
-Reopen Terminal and recheck `node -v`.
-
-### D3. Checkpoint
-
-- [ ] `node -v` ≥ 22  
-- [ ] `npm -v` works  
-
----
-
-## 7. Stage E — Install OpenClaw + start the gateway
-
-### E1. Install the OpenClaw CLI
+Then re-check:
 
 ```bash
-npm install -g openclaw
 openclaw --version
 ```
 
-If `openclaw: command not found` after a successful install:
+If OpenClaw is still missing, continue to **C5**.
+
+### C5. Only if needed — install OpenClaw with npm
+
+```bash
+npm install -g openclaw@latest
+openclaw --version
+```
+
+### C6. PATH fixes (“installed but command not found”)
+
+**Homebrew:**
+
+```bash
+eval "$(/usr/local/bin/brew shellenv)"
+echo 'eval "$(/usr/local/bin/brew shellenv)"' >> ~/.zprofile
+```
+
+**Node / OpenClaw:**
 
 ```bash
 npm config get prefix
@@ -445,9 +480,45 @@ export PATH="$(npm config get prefix)/bin:$PATH"
 echo 'export PATH="$(npm config get prefix)/bin:$PATH"' >> ~/.zprofile
 ```
 
-Reopen Terminal and try `openclaw --version` again.
+Reopen Terminal and test the commands again.
 
-### E2. Onboard / setup
+### C7. Older Intel iMac notes
+
+- First installs can be slow. Leave them alone.  
+- Prefer prebuilt packages when Homebrew offers them.  
+- Do not install OpenCore to “fix” Homebrew.  
+
+### C8. Checkpoint
+
+- [ ] `brew --version` works in a **new** Terminal window  
+- [ ] `node -v` is 22 or newer  
+- [ ] `npm -v` works  
+- [ ] `openclaw --version` works  
+
+---
+
+## 6. Stage D — Usually skipped
+
+Stage letters stay stable for the rest of this guide.
+
+If Stage C already gave you working `brew`, `node`, `npm`, and `openclaw`, **skip straight to Stage E**.
+
+Only linger here if you still need a final Node check after the installer path:
+
+```bash
+node -v
+npm -v
+```
+
+You want Node **22+**. If not, use the Node rescue steps back in **Stage C4**, then continue.
+
+---
+
+## 7. Stage E — Onboard + start the gateway
+
+### E1. Onboard / setup
+
+If onboarding did not already finish during install:
 
 ```bash
 openclaw onboard
@@ -467,7 +538,7 @@ Prefer:
 - Token auth enabled
 - Workspace path = `<WORKSPACE_PATH>`
 
-### E3. Start and check the gateway
+### E2. Start and check the gateway
 
 ```bash
 openclaw gateway status
@@ -489,7 +560,7 @@ openclaw dashboard
 
 Prefer `http://127.0.0.1:<GATEWAY_PORT>` style URLs over fancy hostnames.
 
-### E4. If the gateway will not start
+### E3. If the gateway will not start
 
 ```bash
 openclaw doctor
@@ -499,7 +570,7 @@ openclaw logs --follow
 
 Stop and fix before continuing.
 
-### E5. Checkpoint
+### E4. Checkpoint
 
 - [ ] `openclaw --version` works  
 - [ ] gateway running  
@@ -1266,17 +1337,23 @@ Check Apple menu → About This Mac → Storage, free some space, then retry.
 
 ## 19. Obstacle playbook
 
+### OpenClaw installer failed at Homebrew
+1. Fix Command Line Tools first  
+2. Install Homebrew manually (Stage C3)  
+3. Re-run the OpenClaw installer (Stage C1)  
+4. Only if still stuck, use Node/npm rescue steps in Stage C4–C5  
+
 ### Homebrew install script failed
 1. Fix Command Line Tools first  
 2. Reboot  
-3. Retry official installer  
+3. Retry official Homebrew installer  
 4. Only then use official manual install docs  
 
 ### `brew` works once, then vanishes in a new Terminal
-PATH not set in `~/.zprofile`. Re-do Stage C3.
+PATH not set in `~/.zprofile`. Re-do Stage C6 (Homebrew PATH).
 
-### `openclaw` command not found after npm install
-Node bin directory not on PATH. Re-do Stage E1 path fix.
+### `openclaw` command not found after install
+Node/npm bin directory not on PATH. Re-do Stage C6.
 
 ### Gateway running but no model replies
 Re-auth the model provider. Check `openclaw models status`.
@@ -1317,8 +1394,9 @@ openclaw security audit --deep
 ## 21. Suggested one-day schedule
 
 ### Morning
-- Stages A–D (Mac, CLT, Homebrew, Node)
-- Stage E (OpenClaw gateway)
+- Stages A–B (Mac, CLT)
+- Stage C (OpenClaw installer first; manual Homebrew only if needed)
+- Stage E (onboard + gateway)
 
 ### Midday
 - Stages F–G (workspace + model auth)
@@ -1374,9 +1452,9 @@ Optional useful context:
 
 1. Update macOS  
 2. Install Apple Command Line Tools  
-3. Install Homebrew  
-4. Install Node 22+  
-5. Install OpenClaw and start gateway  
+3. Run the OpenClaw installer first (it may install Homebrew + Node for you)  
+4. If it fails at Homebrew: install Homebrew manually, then re-run the OpenClaw installer  
+5. Onboard and start the gateway  
 6. Create workspace identity/memory files  
 7. Login cloud model provider  
 8. Prove memory with a write/read test (Obsidian optional)  
