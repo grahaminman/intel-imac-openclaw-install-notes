@@ -105,6 +105,7 @@ It **reads files** in the workspace. If something matters, write it down.
 - Most pain is front-loaded: Apple developer tools, Homebrew, Node, accounts.
 - Once the foundation works, Telegram/Discord/memory are much easier.
 - If a step fails, **stop**. Do not stack five half-broken installs.
+- **Troubleshooting help during install:** on the tested setup, [Grok.com](https://grok.com) was used to debug install errors (paste the exact command + full error text; never paste tokens/passwords). Once OpenClaw itself is working, you can switch to asking your local OpenClaw assistant to help troubleshoot the remaining stages.
 
 ### 1.2 What this guide deliberately avoids
 
@@ -1306,6 +1307,8 @@ openclaw doctor
 ```
 
 Do **not** include tokens or passwords.
+
+**Where to ask:** before OpenClaw works, use [Grok.com](https://grok.com) (or similar) with the template above — that is what was used on the tested install. After OpenClaw is up, ask your OpenClaw assistant in webchat/Telegram/Discord instead.
 
 Optional useful context:
 
