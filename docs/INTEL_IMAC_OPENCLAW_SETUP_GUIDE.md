@@ -172,7 +172,7 @@ Set:
 1. Open **Terminal** (Spotlight: `Cmd + Space`, type `Terminal`, Enter).
 2. Copy **one command at a time**.
 3. Paste with `Cmd + V`, then press **Return**.
-4. If macOS asks for your password, type it (nothing will appear as you type — that is normal) and press Return.
+4. If macOS asks for your password, type it (nothing will appear as you type — that is normal) and press Return. If you mistype it, the Mac will usually say the password was incorrect and let you try again. For many Terminal admin prompts (`sudo`), you typically get about **3 tries** before that command gives up — just run the same command again and re-enter the password carefully.
 5. If something goes wrong and Terminal shows an error (often in red, or text starting with `error:` / `fatal:`):
    - **Stop.** Do not keep running more install steps.
    - Select **all the text from the command you typed down through the full error message** (not just one line).
