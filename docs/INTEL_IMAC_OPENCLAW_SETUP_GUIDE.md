@@ -167,24 +167,20 @@ Set:
 <WORKSPACE_PATH> = /Users/<MAC_USERNAME>/OpenClaw/workspace
 ```
 
-#### Why this guide does not offer a second "Storage" volume layout
-
-On a **normal stock macOS Intel iMac**, internal SSD + HDD are usually presented as **one volume** to you (especially a working **Fusion Drive**, which Finder treats as a single disk with the combined capacity).
-
-So for this audience you only need:
-
-- folders under your home directory, e.g. `~/OpenClaw/...`
-- enough free space on that main volume
-
-A split layout like `/Volumes/Storage/...` is an **advanced / non-standard** situation (for example OpenCore installs, broken/split Fusion, or deliberately separate disks). That is **out of scope** here and not required for OpenClaw.
-
 ### 1.6 How to use Terminal safely
 
 1. Open **Terminal** (Spotlight: `Cmd + Space`, type `Terminal`, Enter).
 2. Copy **one command at a time**.
 3. Paste with `Cmd + V`, then press **Return**.
 4. If macOS asks for your password, type it (nothing will appear as you type — that is normal) and press Return.
-5. If a command prints red errors, copy the error and stop at that stage.
+5. If something goes wrong and Terminal shows an error (often in red, or text starting with `error:` / `fatal:`):
+   - **Stop.** Do not keep running more install steps.
+   - Select **all the text from the command you typed down through the full error message** (not just one line).
+   - Copy it (`Cmd + C`).
+   - Paste the whole thing into an AI chat and ask for help fixing that exact step.
+   - Before OpenClaw is working, use [Grok.com](https://grok.com) (that is what was used on the tested install).
+   - After OpenClaw is working, you can ask your OpenClaw assistant instead.
+   - Never include passwords, bot tokens, or API keys in what you paste.
 
 ---
 
