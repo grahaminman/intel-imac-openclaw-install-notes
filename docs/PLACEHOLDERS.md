@@ -8,8 +8,7 @@ Use these consistently when adapting the guide or generating screenshots.
 | `<ASSISTANT_NAME>` | `Atlas` | Yes | Do not use a private production agent name if you care about anonymity |
 | `<ASSISTANT_EMOJI>` | `🛠️` | Yes | Optional |
 | `<MAC_USERNAME>` | `alex` | Maybe | Real usernames can identify a machine/account |
-| `<WORKSPACE_PATH>` | `/Users/alex/OpenClaw/workspace` | Maybe | Keep generic in public docs |
-| `<STORAGE_VOLUME>` | `Data` | Yes | Volume label only |
+| `<WORKSPACE_PATH>` | `/Users/alex/OpenClaw/workspace` | Maybe | Keep generic in public docs; home-folder layout only |
 | `<TIMEZONE>` | `Europe/London` | Yes | Low sensitivity |
 | `<DEFAULT_MODEL>` | `xai/grok-example` | Yes | Use current real ids only in private notes |
 | `<TELEGRAM_BOT_USERNAME>` | `my_openclaw_bot` | Yes | Public username |

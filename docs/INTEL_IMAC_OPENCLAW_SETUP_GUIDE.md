@@ -51,8 +51,7 @@ Replace these with your own values. Explanatory notes are included where a value
 | `<ASSISTANT_NAME>` | The name you give your agent | Example only: `Atlas`, `Nova`, `Helper` — pick yours |
 | `<ASSISTANT_EMOJI>` | Optional emoji | Example: `🔍` |
 | `<MAC_USERNAME>` | macOS account short name | Finder path is often `/Users/<MAC_USERNAME>` |
-| `<WORKSPACE_PATH>` | Folder OpenClaw should use as home | Recommended starter: `/Users/<MAC_USERNAME>/OpenClaw/workspace` |
-| `<STORAGE_VOLUME>` | Optional extra volume name | Only if you keep big files off the system disk. Example name shape: `Storage` |
+| `<WORKSPACE_PATH>` | Folder OpenClaw should use as home | Use: `/Users/<MAC_USERNAME>/OpenClaw/workspace` |
 | `<TIMEZONE>` | Your IANA timezone | Examples: `Europe/London`, `America/New_York` |
 | `<DEFAULT_MODEL>` | Your chosen cloud model id | Example shape: `xai/grok-...` — use whatever `openclaw models status` currently lists |
 | `<TELEGRAM_BOT_USERNAME>` | Bot username from BotFather | Public username is fine to record; **token is secret** |
@@ -145,13 +144,10 @@ Create these only as needed, and store credentials privately:
 Also decide:
 
 - `<MAC_USERNAME>` (local account short name)
-- whether you have a second large disk/volume (`<STORAGE_VOLUME>`)
-  - Ideal later: put workspace + local models there  
-  - Fine for starters: keep everything under your home folder
 
 ### 1.5 Paths used in this guide
 
-#### Layout A — Simple (recommended for first-timers)
+Use one simple layout on the Mac's main user volume:
 
 ```text
 /Users/<MAC_USERNAME>/OpenClaw/workspace
@@ -171,15 +167,16 @@ Set:
 <WORKSPACE_PATH> = /Users/<MAC_USERNAME>/OpenClaw/workspace
 ```
 
-#### Layout B — Extra volume for large files (optional)
+#### Why this guide does not offer a second "Storage" volume layout
 
-```text
-/Volumes/<STORAGE_VOLUME>/OpenClaw/workspace
-/Volumes/<STORAGE_VOLUME>/MacApps/Ollama/models
-/Users/<MAC_USERNAME>/.openclaw/
-```
+On a **normal stock macOS Intel iMac**, internal SSD + HDD are usually presented as **one volume** to you (especially a working **Fusion Drive**, which Finder treats as a single disk with the combined capacity).
 
-Only use Layout B if the volume already exists and reliably mounts.
+So for this audience you only need:
+
+- folders under your home directory, e.g. `~/OpenClaw/...`
+- enough free space on that main volume
+
+A split layout like `/Volumes/Storage/...` is an **advanced / non-standard** situation (for example OpenCore installs, broken/split Fusion, or deliberately separate disks). That is **out of scope** here and not required for OpenClaw.
 
 ### 1.6 How to use Terminal safely
 
@@ -245,24 +242,13 @@ Plug into power. Optionally reduce sleep while you work so long installs are not
 
 ### A6. Create your folders
 
-**Layout A:**
-
 ```bash
 mkdir -p "$HOME/OpenClaw/workspace"
 mkdir -p "$HOME/OpenClaw/projects"
 ls "$HOME/OpenClaw"
 ```
 
-**Layout B example:**
-
-```bash
-ls "/Volumes/<STORAGE_VOLUME>"
-mkdir -p "/Volumes/<STORAGE_VOLUME>/OpenClaw/workspace"
-mkdir -p "/Volumes/<STORAGE_VOLUME>/OpenClaw/projects"
-mkdir -p "/Volumes/<STORAGE_VOLUME>/MacApps/Ollama/models"
-```
-
-Replace `<STORAGE_VOLUME>` first. If the volume path does not exist, use Layout A.
+Everything for this guide lives under your home folder on the main Mac volume.
 
 ### A7. Checkpoint
 
@@ -983,30 +969,10 @@ Check:
 ollama --version
 ```
 
-### K2. Optional: keep models on an extra volume
+### K2. Model storage (defaults are fine)
 
-If using Layout B:
-
-```bash
-mkdir -p "/Volumes/<STORAGE_VOLUME>/MacApps/Ollama/models"
-mkdir -p ~/.ollama
-ln -sfn "/Volumes/<STORAGE_VOLUME>/MacApps/Ollama/models" ~/.ollama/models
-```
-
-Add to `~/.zprofile`:
-
-```bash
-export OLLAMA_MODELS="/Volumes/<STORAGE_VOLUME>/MacApps/Ollama/models"
-```
-
-Then:
-
-```bash
-source ~/.zprofile
-echo "$OLLAMA_MODELS"
-```
-
-If you do not have an extra volume, skip this and use defaults.
+Leave Ollama on its default location under your home/main volume.  
+You do **not** need a separate `/Volumes/...` models disk for this guide.
 
 ### K3. Pull an embeddings model
 
@@ -1207,9 +1173,10 @@ openclaw logs --follow
 3. Start/restart the gateway service if needed  
 4. Test Telegram or Discord again  
 
-### If an extra storage volume was unplugged
+### If free space runs out
 
-If workspace/models live on `/Volumes/<STORAGE_VOLUME>`, mount it before blaming OpenClaw.
+OpenClaw workspace files are small at first; local models can use more disk.  
+Check Apple menu → About This Mac → Storage, free some space, then retry.
 
 ---
 
@@ -1315,7 +1282,7 @@ Optional useful context:
 
 - iMac model/year  
 - RAM amount  
-- whether you used Layout A or B  
+- roughly how much free disk you have  
 
 ---
 
