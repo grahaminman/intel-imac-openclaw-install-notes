@@ -17,7 +17,7 @@
 
 ### Testing status
 
-**This guide has only been tested on a 2015 Intel iMac with 32 GB RAM.**
+**This guide has only been tested on a 2015 Intel iMac, Quad Core, with 32 GB RAM.**
 
 It may work on other Intel iMacs and nearby macOS versions, but that is **not guaranteed**.
 
@@ -112,8 +112,7 @@ OpenClaw memory is **plain files in the workspace** (`MEMORY.md`, `memory/…`, 
 
 - **OpenCore Legacy Patcher as a requirement for this guide**  
   The install this guide is based on **can use OpenCore and work well**, but if you are not experienced at setting up machines it is **simpler to install without it** (official macOS on a supported Intel iMac).  
-  If you **do** use OpenCore, expect **extra steps** — especially around **storage volumes**, boot/mount reliability, and keeping large workspace/model disks available after reboot. This guide does not walk through OpenCore install or storage patching.  
-  Do **not** install OpenCore just because you are following this OpenClaw guide.
+  If you **do** use OpenCore, expect **extra steps** — especially around **storage volumes**, boot/mount reliability, and keeping large workspace/model disks available after reboot. This guide does not walk through OpenCore install or storage patching.
 - Exposing OpenClaw to the public internet on day one
 - Fancy multi-agent factories on day one
 - Paid extras you do not need yet
@@ -220,7 +219,7 @@ Record for your notes:
 - memory (RAM)
 - macOS name/version
 
-This guide’s only formal test claim remains: **2015 Intel iMac / 32 GB RAM**.
+This guide’s only formal test claim remains: **2015 Intel iMac, Quad Core / 32 GB RAM**.
 
 ### A2. Prefer stock macOS
 
@@ -248,6 +247,8 @@ ls "$HOME/OpenClaw"
 ```
 
 Everything for this guide lives under your home folder on the main Mac volume.
+
+**Why make this folder yourself?** OpenClaw can create a workspace later, but its default often sits inside a hidden folder (`~/.openclaw/...`). Folders that start with a dot are easy for beginners to miss in Finder. Creating `OpenClaw` in your home folder puts your notes where you can see and back them up like any normal folder. You can skip this and accept the default later — just know those files will be harder to find.
 
 ### A7. Checkpoint
 
@@ -1395,7 +1396,7 @@ Optional useful context:
 - Keep the repo **private** until reviewed  
 - Rename before public release for searchability  
 - Keep examples generic; never commit live tokens or personal server inventories  
-- Formal test claim remains: **2015 Intel iMac / 32 GB RAM**
+- Formal test claim remains: **2015 Intel iMac, Quad Core / 32 GB RAM**
 
 ---
 
