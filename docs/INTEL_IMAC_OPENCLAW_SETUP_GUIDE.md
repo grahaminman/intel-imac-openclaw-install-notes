@@ -191,10 +191,10 @@ Set:
 |---|---|---|---|
 | A | Mac basics + updates | Yes | macOS updated, disk space OK |
 | B | Xcode Command Line Tools | Yes | `xcode-select -p` works |
-| C | OpenClaw install (Homebrew + Node may come with it) | Yes | `openclaw --version` works; Homebrew + Node present |
-| D | _(reserved / usually skipped)_ | — | Only if you still need a manual Node-only cleanup after C |
-| E | Onboard + gateway | Yes | gateway status is running |
-| F | Workspace + identity files | Yes | core `.md` files exist |
+| C | OpenClaw install (Homebrew + Node may come with it) | Yes | `openclaw --version` works; Node present |
+| D | Node still broken after C? | Only if needed | `node -v` shows 22+; otherwise skip |
+| E | Onboard + gateway + confirm workspace folder | Yes | gateway running; workspace path is the one you want |
+| F | Workspace starter files (short first pass) | Yes | key `.md` files exist with your name filled in |
 | G | Cloud model login | Yes | short chat reply works |
 | H | Persistent memory (workspace files) | Yes | memory write/read test passes |
 | H-opt | Obsidian (browse the same folder) | Optional | vault opens on workspace if you want it |
@@ -496,24 +496,26 @@ Reopen Terminal and test the commands again.
 
 ---
 
-## 6. Stage D — Usually skipped
+## 6. Stage D — Only if Node is still broken
 
-Stage letters stay stable for the rest of this guide.
+**Most people skip this stage.**
 
-If Stage C already gave you working `brew`, `node`, `npm`, and `openclaw`, **skip straight to Stage E**.
-
-Only linger here if you still need a final Node check after the installer path:
+After Stage C, check:
 
 ```bash
 node -v
 npm -v
+openclaw --version
 ```
 
-You want Node **22+**. If not, use the Node rescue steps back in **Stage C4**, then continue.
+- If `node -v` shows **v22 or newer** and `openclaw --version` works → **go to Stage E**  
+- If Node is missing/old → use Stage **C4** (and C5/C6 if needed), then continue to Stage E  
+
+You do not need a perfect Homebrew install to proceed if Node + OpenClaw already work.
 
 ---
 
-## 7. Stage E — Onboard + start the gateway
+## 7. Stage E — Onboard + start the gateway + confirm workspace
 
 ### E1. Onboard / setup
 
@@ -533,11 +535,37 @@ openclaw configure
 Prefer:
 
 - **Local gateway**
-- **Loopback / localhost only**
+- **Loopback / localhost only** (only this Mac can reach it)
 - Token auth enabled
-- Workspace path = `<WORKSPACE_PATH>`
+- Workspace path = `<WORKSPACE_PATH>`  
+  Example: `/Users/alex/OpenClaw/workspace`
 
-### E2. Start and check the gateway
+### E2. Confirm OpenClaw is using the folder you expect
+
+OpenClaw’s default workspace is often a **hidden** folder under `~/.openclaw/`.  
+If you created `~/OpenClaw/workspace` in Stage A, make sure onboard/configure is pointed there — otherwise you can end up with **two** workspaces and wonder why notes “vanished.”
+
+```bash
+openclaw status
+ls "$HOME/OpenClaw/workspace"
+ls "$HOME/.openclaw/workspace"
+```
+
+What you want:
+
+- status/config shows the workspace path you chose, ideally  
+  `/Users/<MAC_USERNAME>/OpenClaw/workspace`
+- that folder exists and is the one you will edit
+
+If it still points at `~/.openclaw/workspace`:
+
+1. Run `openclaw configure` or `openclaw onboard` again and set workspace to `<WORKSPACE_PATH>`  
+2. Or follow current OpenClaw docs for `agents.defaults.workspace`  
+3. Re-check with `openclaw status`  
+
+Do this **before** filling lots of memory files.
+
+### E3. Start and check the gateway
 
 ```bash
 openclaw gateway status
@@ -548,8 +576,9 @@ openclaw status
 Healthy signs:
 
 - gateway **running**
-- local probe OK on something like `ws://127.0.0.1:<GATEWAY_PORT>`
-- no critical doctor failures
+- local address something like `ws://127.0.0.1:<GATEWAY_PORT>`
+- `openclaw doctor` has no critical failures  
+  (`doctor` = built-in health check)
 
 Open the control UI:
 
@@ -559,7 +588,7 @@ openclaw dashboard
 
 Prefer `http://127.0.0.1:<GATEWAY_PORT>` style URLs over fancy hostnames.
 
-### E3. If the gateway will not start
+### E4. If the gateway will not start
 
 ```bash
 openclaw doctor
@@ -569,45 +598,58 @@ openclaw logs --follow
 
 Stop and fix before continuing.
 
-### E4. Checkpoint
+### E5. Checkpoint
 
 - [ ] `openclaw --version` works  
 - [ ] gateway running  
 - [ ] dashboard/control UI opens locally  
+- [ ] workspace path is the visible folder you chose (not a surprise hidden default)  
 
 ---
 
-## 8. Stage F — Workspace files (your “brain on disk”)
+## 8. Stage F — Workspace starter files (short first pass)
 
-### F1. Confirm workspace path
+Goal today: enough identity + memory files that the assistant knows who you are.  
+You can tidy and expand later — do **not** try to build a perfect second brain before first chat.
 
-```bash
-ls "<WORKSPACE_PATH>"
-openclaw status
-```
-
-If OpenClaw is pointed somewhere else, use onboarding/configure/docs for your version to point it at `<WORKSPACE_PATH>`.
-
-### F2. Create the minimum identity/memory files
+### F1. Go to the confirmed workspace
 
 ```bash
 cd "<WORKSPACE_PATH>"
-mkdir -p memory second-brain templates directives skills
-touch AGENTS.md SOUL.md IDENTITY.md USER.md MEMORY.md TOOLS.md TODO.md HEARTBEAT.md Home.md
+# example: cd "$HOME/OpenClaw/workspace"
+pwd
+ls
+```
+
+If onboard already created files here, keep them and edit — do not start a second parallel set elsewhere.
+
+### F2. Create only the day-one essentials
+
+```bash
+mkdir -p memory
+touch USER.md IDENTITY.md MEMORY.md TOOLS.md AGENTS.md SOUL.md
+```
+
+Optional same day (nice, not required before first reply):
+
+```bash
+touch TODO.md HEARTBEAT.md Home.md
+mkdir -p second-brain templates directives skills
 ```
 
 | File | Purpose |
 |---|---|
-| `AGENTS.md` | operating rules for the assistant |
-| `SOUL.md` | persona / tone |
-| `IDENTITY.md` | short name + vibe |
 | `USER.md` | about you |
-| `MEMORY.md` | curated long-term memory |
-| `TOOLS.md` | machine-local notes (paths, IDs) |
-| `TODO.md` | ideas and open loops |
+| `IDENTITY.md` | assistant name + vibe |
+| `MEMORY.md` | long-term facts |
+| `TOOLS.md` | machine notes (paths, public bot names) |
+| `AGENTS.md` | operating rules |
+| `SOUL.md` | tone / boundaries |
 | `memory/` | daily raw notes |
 
-### F3. Starter content with placeholders
+### F3. Fill the essentials (replace placeholders)
+
+Edit in TextEdit or any editor. Example values shown in comments mentally — use your real ones.
 
 **`USER.md`**
 
@@ -628,16 +670,6 @@ touch AGENTS.md SOUL.md IDENTITY.md USER.md MEMORY.md TOOLS.md TODO.md HEARTBEAT
 - Name: <ASSISTANT_NAME>
 - Emoji: <ASSISTANT_EMOJI>
 - Vibe: Practical, clear, helpful co-pilot
-```
-
-**`SOUL.md`** (short version is fine)
-
-```markdown
-# SOUL.md
-
-I am a capable local assistant named <ASSISTANT_NAME>.
-I write important facts into workspace files so they survive restarts.
-I ask before sending emails, public posts, or anything external I am unsure about.
 ```
 
 **`MEMORY.md`**
@@ -666,35 +698,39 @@ I ask before sending emails, public posts, or anything external I am unsure abou
 ## Paths
 - Workspace: <WORKSPACE_PATH>
 - OpenClaw state: ~/.openclaw/
-
-## Accounts to fill in later
-- Telegram bot username: <TELEGRAM_BOT_USERNAME>
-- Discord bot name: <DISCORD_BOT_NAME>
-- Default model: <DEFAULT_MODEL>
 ```
 
-**`AGENTS.md`** (short version)
+**`AGENTS.md`** (short)
 
 ```markdown
 # AGENTS.md
 
 ## Memory
-- Write important decisions, preferences, and setup changes into files
-- Daily raw notes go in memory/YYYY-MM-DD.md
-- Long-term distilled facts go in MEMORY.md
-- Machine-specific paths/IDs go in TOOLS.md
-- Do not rely on chat history alone
+- Write important decisions into files
+- Daily notes go in memory/YYYY-MM-DD.md
+- Long-term facts go in MEMORY.md
+- Machine paths/IDs go in TOOLS.md
 
 ## Safety
-- Ask before external actions (email, public posts)
+- Ask before external actions
 - Never put secrets into git or shared chats
+```
+
+**`SOUL.md`** (short)
+
+```markdown
+# SOUL.md
+
+I am a capable local assistant named <ASSISTANT_NAME>.
+I write important facts into workspace files so they survive restarts.
+I ask before sending emails, public posts, or anything external I am unsure about.
 ```
 
 **First daily note:**
 
 ```bash
 DATE=$(date +%Y-%m-%d)
-cat > "<WORKSPACE_PATH>/memory/$DATE.md" <<EOF
+cat > "memory/$DATE.md" <<EOF
 # $DATE
 
 ## Session Log
@@ -702,17 +738,14 @@ cat > "<WORKSPACE_PATH>/memory/$DATE.md" <<EOF
 
 ## Decisions Made
 - Using workspace files for persistent memory
-
-## Things to Remember
-- Do stages in order; verify before moving on
 EOF
 ```
 
 ### F4. Checkpoint
 
-- [ ] workspace path is intentional and stable  
-- [ ] core markdown files exist with your placeholders replaced  
-- [ ] `memory/YYYY-MM-DD.md` exists for today  
+- [ ] you are editing the same workspace path Stage E confirmed  
+- [ ] `USER.md`, `IDENTITY.md`, `MEMORY.md` filled in  
+- [ ] today’s file exists under `memory/`  
 
 ---
 
@@ -767,146 +800,89 @@ openclaw models auth login --provider xai --force
 
 ---
 
-## 10. Stage H — Persistent memory (workspace files; Obsidian optional)
+## 10. Stage H — Prove memory works (Obsidian optional)
 
-### H1. How memory actually works
+Files were created in **Stage F**. This stage only **tests** memory and optionally adds Obsidian.
 
-OpenClaw’s persistent memory is **built in**: Markdown files in the workspace folder. That is the source of truth.
+### H1. Quick reminder
 
-Typical pattern:
+OpenClaw memory = Markdown files in the workspace.  
+If it is only said in chat and never written down, it may be forgotten.  
+Any editor is fine (TextEdit, etc.).
 
-1. You (or the assistant) write notes into workspace files  
-2. Next session, OpenClaw loads key bootstrap files (for example `AGENTS.md`, `SOUL.md`, `USER.md`, `MEMORY.md`)  
-3. Daily notes live under `memory/YYYY-MM-DD.md`  
-4. Optional search tools can help find older notes later  
+### H2. Memory test (required)
 
-If it is only said in chat and never written down, it may be forgotten.
-
-You can open those files with **any** editor (TextEdit, VS Code, Finder preview). That is enough for a working system.
-
-### H2. Recommended starter folder structure
-
-```text
-<WORKSPACE_PATH>/
-  AGENTS.md
-  SOUL.md
-  IDENTITY.md
-  USER.md
-  MEMORY.md
-  TOOLS.md
-  Home.md
-  memory/
-    YYYY-MM-DD.md
-  second-brain/
-    README.md
-    concepts/
-    projects/
-    journal/
-  templates/
-  directives/
-  skills/
-```
-
-Simple `Home.md`:
-
-```markdown
-# Home
-
-## Daily
-- Notes under `memory/`
-
-## Long-term
-- See `MEMORY.md`
-
-## Projects
-- Add notes under `second-brain/` as you go
-```
-
-### H3. Memory test (required)
-
-In OpenClaw chat:
+In OpenClaw chat (dashboard/webchat is fine):
 
 ```text
 Please add to MEMORY.md that my test phrase is "blue kettle".
 Then tell me where you wrote it.
 ```
 
-Start a fresh session/surface and ask:
+Start a **fresh** chat/session and ask:
 
 ```text
 What is my test phrase?
 ```
 
-If it answers from the file, persistent memory is working. **You do not need Obsidian for this test.**
+If it answers from the file, persistent memory is working. **Obsidian is not required for this test.**
 
-### H4. Optional — Obsidian (human-friendly browser for the same files)
+### H3. Optional — Obsidian
 
-Install Obsidian only if you want a nicer way to browse and link notes.
+Install only if you want a nicer way to browse the same folder.
 
-**What Obsidian is good for**
+1. Download <https://obsidian.md>  
+2. Install  
+3. **Open folder as vault** → choose `<WORKSPACE_PATH>`  
 
-- Comfortable reading/editing of the workspace  
-- Graph view and `[[wiki links]]` if you use them  
-- Daily-note plugins and other note-taking extras  
+One workspace = one vault. Obsidian does not create OpenClaw memory; it only views/edits the files.
 
-**What Obsidian is not**
+### H4. Checkpoint
 
-- Not required for OpenClaw to remember anything  
-- Not a second memory database  
-- Not a substitute for writing facts into workspace files  
-
-If you want it:
-
-1. Download from the official site: <https://obsidian.md>  
-2. Install the app  
-3. **Open folder as vault** → choose `<WORKSPACE_PATH>`
-
-One workspace = one vault. Avoid creating a second unrelated vault for the same notes.
-
-Optional CLI check (skip if unavailable):
-
-```bash
-obsidian version
-```
-
-Later optional extras (plugins, extra search tools) are nice-to-have only.
-
-### H5. Checkpoint
-
-**Required**
-
-- [ ] `MEMORY.md` and `memory/` exist and are in use  
 - [ ] memory write/read test passed  
-
-**Optional**
-
-- [ ] Obsidian opens `<WORKSPACE_PATH>` if you chose to install it  
+- [ ] Obsidian only if you want it  
 
 ---
 
 ## 11. Stage I — Telegram bot
 
+Easiest chat surface for many people. One working DM is enough for a real system.
+
 ### I1. Create the bot
 
-1. In Telegram, talk to **@BotFather**
-2. `/newbot`
-3. Choose a name and username → record `<TELEGRAM_BOT_USERNAME>`
-4. Copy the **bot token** into your password manager only
+1. In Telegram, open **@BotFather**  
+2. Send `/newbot` and follow the prompts  
+3. Save the public username as `<TELEGRAM_BOT_USERNAME>`  
+4. Copy the **bot token** into your password manager only (never into git/chat notes)
 
-### I2. Find your Telegram user id
+### I2. Find your numeric Telegram user id
 
-Obtain your numeric id and store it as `<TELEGRAM_USER_ID>`.
+You need the **number** OpenClaw will allowlist (not your @username).
 
-### I3. Configure OpenClaw
+Common easy method:
 
-Use onboarding/config UI if available, or supported OpenClaw config/secrets commands for your version.
+1. Message a trusted “user id” bot such as `@userinfobot` or `@getidsbot`  
+2. Copy the numeric id → `<TELEGRAM_USER_ID>`  
 
-Target shape:
+### I3. Put the bot into OpenClaw (pick one path)
+
+**Path A — preferred if the UI offers it**
+
+1. `openclaw dashboard` or `openclaw configure`  
+2. Add/enable **Telegram**  
+3. Paste bot token into OpenClaw’s secret/token field (not into a shared doc)  
+4. Set DM access to **allowlist** / only you  
+5. Add `<TELEGRAM_USER_ID>`  
+6. Save; restart gateway if asked  
+
+**Path B — config shape to match** (field names can move slightly by version; if unsure, Path A or current docs)
+
+In OpenClaw config, you want the idea of:
 
 - Telegram enabled  
-- **DM policy = allowlist**  
-- allowlist includes only `<TELEGRAM_USER_ID>`  
-- bot token stored in OpenClaw secrets storage  
+- bot token stored as a secret  
+- `dmPolicy`: `allowlist`  
+- `allowFrom`: your numeric `<TELEGRAM_USER_ID>` only  
 
 Then:
 
@@ -915,129 +891,109 @@ openclaw channels status --probe
 openclaw gateway status
 ```
 
-Restart gateway if the CLI tells you to.
-
 ### I4. Test
 
-1. DM your bot on Telegram  
-2. Send `ping` or `Say hello`  
-3. Confirm a reply  
+1. Open a **DM** with your bot in Telegram (not a group yet)  
+2. Send: `ping`  
+3. You should get a reply  
 
-### I5. Common Telegram failures
+### I5. If it fails
 
 | Problem | Fix |
 |---|---|
-| Bot exists but never replies | token wrong; gateway not running; channel disabled |
-| Replies to strangers | tighten allowlist immediately |
-| Works in webchat, not Telegram | channel config/probe; restart gateway |
-| Token leaked in chat | revoke/regenerate at BotFather |
+| No reply | gateway running? token correct? channel enabled? |
+| Works in webchat only | re-check Telegram enable + probe; restart gateway |
+| Strangers can talk to it | lock allowlist to your numeric id only |
+| Token leaked | revoke/regenerate in BotFather immediately |
 
 ### I6. Checkpoint
 
 - [ ] DM reply works  
-- [ ] allowlist locked to you  
-- [ ] bot username recorded in `TOOLS.md` (**not** the token)  
+- [ ] only your user id is allowed  
+- [ ] bot **username** noted in `TOOLS.md` — never the token  
 
 ---
 
 ## 12. Stage J — Discord bot
 
-Discord has more moving parts than Telegram. Go slowly.
+More steps than Telegram. Skip on day one if Telegram already works and you are tired.
 
-### J1. Create the application
+### J1. Create the Discord application + bot
 
-1. Open <https://discord.com/developers/applications>
-2. **New Application**
-3. Create a **Bot** → record `<DISCORD_BOT_NAME>`
-4. Copy the bot token to your password manager only
-5. Under **Privileged Gateway Intents**, enable at least:
-   - **Message Content Intent** (required for normal channel text)
-   - **Server Members Intent** (recommended)
-6. Save changes
+1. Open <https://discord.com/developers/applications>  
+2. **New Application** → name it  
+3. **Bot** → Add Bot → record `<DISCORD_BOT_NAME>`  
+4. Reset/copy **bot token** → password manager only  
+5. **Privileged Gateway Intents** → enable at least:  
+   - **Message Content Intent** (needed to read normal channel text)  
+   - **Server Members Intent** (recommended)  
+6. Save  
 
-### J2. Invite the bot to your private server
+### J2. Invite the bot to a private server you control
 
-OAuth2 → URL Generator:
+1. OAuth2 → URL Generator  
+2. Scope: `bot` (add `applications.commands` if shown and you want slash commands)  
+3. Permissions minimum: View Channels, Send Messages, Read Message History, Embed Links, Attach Files, Add Reactions  
+4. Open the generated URL, pick **your** server, authorise  
+5. Turn on Discord Developer Mode (App Settings → Advanced) → right-click server → Copy Server ID → `<DISCORD_SERVER_ID>`  
+6. Right-click your own name → Copy User ID → `<DISCORD_USER_ID>`  
 
-- Scopes: `bot` (and `applications.commands` if offered/needed)
-- Permissions minimum:
-  - View Channels
-  - Send Messages
-  - Read Message History
-  - Embed Links
-  - Attach Files
-  - Add Reactions
+### J3. Simple channels
 
-Invite only into a server **you control**. Record `<DISCORD_SERVER_ID>`.
+Create at least `#general`. Optional: `#set-up`, `#research`.
 
-### J3. Create simple channels
+### J4. Put Discord into OpenClaw (pick one path)
 
-Suggested starter channels:
+**Path A — preferred if the UI offers it**
 
-- `#general`
-- `#set-up`
-- `#research`
+1. `openclaw dashboard` or `openclaw configure`  
+2. Enable **Discord**  
+3. Paste bot token into secrets  
+4. Allowlist **your** user id and **your** server id  
+5. For a private solo server, you may turn off “require mention” so plain `ping` works  
+6. Save; restart gateway if asked  
 
-### J4. Configure OpenClaw Discord
+**Path B — config idea to match**
 
-Target shape:
-
-- Discord enabled  
-- DM policy allowlist to `<DISCORD_USER_ID>`  
-- guild/server allowlisted with `<DISCORD_SERVER_ID>`  
-- your user allowed  
-- for a private personal server, disabling require-mention can be convenient  
-- bot token in secrets storage  
-
-Then:
+- Discord enabled + token in secrets  
+- DM policy allowlist including `<DISCORD_USER_ID>`  
+- server/guild allowlist including `<DISCORD_SERVER_ID>`  
+- optional: `requireMention: false` on your private server only  
 
 ```bash
 openclaw channels status --probe
 ```
 
-### J5. Test in order
+### J5. Test in the Discord channel (not only webchat)
 
-1. In the server channel: `@<DISCORD_BOT_NAME> ping`  
-2. Then plain: `ping`  
-3. Confirm replies in the **channel itself**
+1. `@<DISCORD_BOT_NAME> ping`  
+2. If you disabled require-mention: plain `ping`  
+3. Success = reply **in that channel**  
 
-### J6. Common Discord obstacles
+### J6. Common failures
 
-#### Message Content Intent off
-**Symptom:** bot online, ignores normal channel messages  
-**Fix:** enable Message Content Intent → save → restart gateway
+| Problem | Fix |
+|---|---|
+| Online but ignores messages | Message Content Intent off → enable → save → restart gateway |
+| Total silence | allowlists missing your user/server id |
+| Can’t send | channel permissions / bot role too low |
+| Webchat works, Discord doesn’t | judge Discord in Discord; re-probe channel |
 
-#### Allowlist too strict / empty
-**Symptom:** silence  
-**Fix:** ensure server id and user id are actually allowlisted
-
-#### Missing channel permissions
-**Symptom:** bot present but cannot speak  
-**Fix:** channel permissions / bot role hierarchy
-
-#### Checking the wrong surface
-Discord channel talks may live in separate sessions from webchat.  
-Judge success in the Discord channel.
-
-#### Status text like content-limited
-On smaller bots this can still be normal if the intent is enabled and channel replies work. Prove it with a ping test.
-
-### J7. Record non-secret IDs in `TOOLS.md`
+### J7. Record non-secrets in `TOOLS.md`
 
 ```markdown
 ## Discord
 - Server id: <DISCORD_SERVER_ID>
 - Bot name: <DISCORD_BOT_NAME>
 - My user id: <DISCORD_USER_ID>
-- Key channels: #general, #set-up
 ```
 
 ### J8. Checkpoint
 
-- [ ] intents enabled  
-- [ ] bot in server with send permissions  
+- [ ] intents on  
+- [ ] bot can send in the channel  
 - [ ] mention ping works  
-- [ ] plain ping works if you disabled require-mention  
+- [ ] plain ping works only if you chose that  
 
 ---
 
@@ -1145,36 +1101,52 @@ If you skipped Ollama:
 
 ---
 
-## 14. Stage L — Cost control
+## 14. Stage L — Cost control (do this before leaving it overnight)
 
-Background automation can spend money quietly.
+Background automation can spend cloud tokens quietly. Do one concrete check now.
 
-### L1. Disable aggressive heartbeat while learning
+### L1. See what is already scheduled
 
-Use OpenClaw config/UI for your version to turn off frequent cloud heartbeats, or set the interval off / zero if supported.
+```bash
+openclaw status
+openclaw cron list
+```
 
-Verify:
+### L2. Turn off frequent heartbeats while learning (concrete action)
+
+A **heartbeat** is a repeating “wake the assistant” timer. Defaults can be every 30–60 minutes and may call your cloud model.
+
+**While you are still learning, turn it off:**
+
+1. Prefer the dashboard/config UI if it shows Heartbeat / interval, and set it off / disabled  
+2. Or set the interval to **`0m`** in config (OpenClaw’s documented way to disable heartbeats):  
+   `agents.defaults.heartbeat.every` = `0m`  
+3. If editing config by hand feels scary, after Stage G works ask in chat:  
+   `Show my heartbeat settings and help me set heartbeat every to 0m`  
+
+Then re-check:
 
 ```bash
 openclaw status
 ```
 
-### L2. Optional: one daily check instead
+### L3. Optional later: one gentle daily job
 
-A safer learning policy:
+Only after the core setup is calm:
 
-- one light daily job  
-- local timezone `<TIMEZONE>`  
-- only notify you if something needs attention  
+- one light daily check  
+- your timezone `<TIMEZONE>`  
+- notify only if something needs attention  
 
 ```bash
 openclaw cron list
 ```
 
-### L3. Checkpoint
+### L4. Checkpoint
 
+- [ ] you looked at `openclaw status` and `openclaw cron list`  
+- [ ] heartbeat is off (`0m`) or you knowingly left a slow interval  
 - [ ] no surprise high-frequency cloud loop  
-- [ ] you understand what is scheduled  
 
 ---
 
@@ -1469,9 +1441,7 @@ Optional useful context:
 
 ## 24. Maintainer note for this repository
 
-- Working GitHub name: `intel-imac-openclaw-install-notes`  
-- Keep the repo **private** until reviewed  
-- Rename before public release for searchability  
+- GitHub name: `intel-imac-openclaw-install-notes`  
 - Keep examples generic; never commit live tokens or personal server inventories  
 - Formal test claim remains: **2015 Intel iMac, Quad Core / 32 GB RAM**
 

@@ -2,13 +2,11 @@
 
 > **How these notes were made:** written from a real install, using OpenClaw’s persistent memory plus my own notes. Some of this was drafted with OpenClaw + Grok 4.5. **It may not be fully accurate.** Treat it as a practical walkthrough that will be corrected as I keep using and testing it — not as perfect documentation.
 
-Private working title for a **generic, shareable** OpenClaw setup guide aimed at less-technical users on **Intel iMacs**.
-
-> **Repo name is temporary.** Change it to something more searchable before making the repository public.
+A **generic, shareable** OpenClaw setup guide aimed at less-technical users on **Intel iMacs**.
 
 | Field | Value |
 |---|---|
-| **Status** | Private draft |
+| **Status** | Public |
 | **Audience** | People setting up OpenClaw on an Intel iMac without deep Terminal experience |
 | **Primary guide** | [`docs/INTEL_IMAC_OPENCLAW_SETUP_GUIDE.md`](docs/INTEL_IMAC_OPENCLAW_SETUP_GUIDE.md) |
 | **Tested on** | 2015 Intel iMac, Quad Core, 32 GB RAM — see disclaimer below |
@@ -78,7 +76,7 @@ Replace placeholders with your own values. Do **not** commit real tokens.
 - Keep the OpenClaw gateway on **localhost / loopback** unless you later harden remote access on purpose.
 - Allowlist only your own Telegram/Discord IDs at first.
 - If a token is pasted into chat, rotate it.
-- This repository should stay **private** until reviewed for public release and renamed.
+- Keep this repo free of live credentials and machine-local private history.
 
 ## Licence
 
@@ -86,6 +84,5 @@ See [`LICENSE`](LICENSE). Documentation is provided as-is, without warranty.
 
 ## Maintainer notes
 
-- Working title / repo slug: `intel-imac-openclaw-install-notes`
-- Rename before public launch to improve discoverability
-- Keep this repo free of live credentials and machine-local private history
+- Repo slug: `intel-imac-openclaw-install-notes`
+- Keep examples generic; never commit live tokens or personal server inventories
