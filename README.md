@@ -46,7 +46,7 @@ A staged install path for:
 - Not a hardened multi-user production deployment guide
 - Not a guide that requires OpenCore Legacy Patcher
 - Not a guide that requires an Apple ID (local Mac account is enough; Apple ID is optional later)
-- Not a dump of anyone’s private tokens, server IDs, or personal notes
+- Not a dump of anyone’s tokens, server IDs, or personal notes
 
 ## Placeholders
 
@@ -76,7 +76,7 @@ Replace placeholders with your own values. Do **not** commit real tokens.
 - Keep the OpenClaw gateway on **localhost / loopback** unless you later harden remote access on purpose.
 - Allowlist only your own Telegram/Discord IDs at first.
 - If a token is pasted into chat, rotate it.
-- Keep this repo free of live credentials and machine-local private history.
+- Keep this repo free of live credentials and machine-local personal history.
 
 ## Licence
 

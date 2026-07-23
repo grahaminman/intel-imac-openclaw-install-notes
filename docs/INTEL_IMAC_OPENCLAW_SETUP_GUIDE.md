@@ -6,10 +6,10 @@
 
 | Field | Value |
 |---|---|
-| **Status** | Generic shareable draft |
+| **Status** | Public guide |
 | **Hardware focus** | Intel iMac class machines |
 | **OS focus** | Official Apple macOS on a supported Intel iMac preferred; OpenCore possible but not taught here |
-| **Repo working title** | `intel-imac-openclaw-install-notes` (rename again before public launch if needed) |
+| **Repository** | `intel-imac-openclaw-install-notes` |
 
 ---
 
@@ -62,7 +62,7 @@ Replace these with your own values. Explanatory notes are included where a value
 | `<GATEWAY_PORT>` | Local OpenClaw gateway port | Common default shape: `18789` — confirm on your install |
 | `<MC_PORT>` | Optional Mission Control port | Common example: `3000` |
 
-**Never commit real values for tokens.** IDs are less sensitive than tokens, but this guide still treats personal IDs as private to you.
+**Never commit real values for tokens.** IDs are less sensitive than tokens, but keep personal IDs in your own notes rather than sharing them widely.
 
 ---
 
@@ -131,7 +131,7 @@ If macOS offers Apple Account / iCloud during first boot, you can skip those and
 
 ### 1.4 Accounts that are actually useful for this guide
 
-Create these only as needed, and store credentials privately:
+Create these only as needed, and store credentials in a password manager / OpenClaw secrets storage:
 
 | Account | Required for this guide? | Why |
 |---|---|---|
@@ -1259,7 +1259,7 @@ Do not block “done” on these:
 - [ ] Cloud model auth works; one successful chat  
 - [ ] Memory write/read test passed (workspace files — Obsidian not required)  
 - [ ] Telegram DM works **or** Discord channel works (both is better)  
-- [ ] Secrets stored privately  
+- [ ] Secrets stored in a password manager / OpenClaw secrets storage  
 - [ ] Background jobs not quietly draining money  
 
 ### Strong setup
@@ -1351,7 +1351,7 @@ Not required for this guide. The reference-style install can work with OpenCore,
 - Tokens live in a password manager / OpenClaw secrets storage  
 - Never commit tokens to GitHub  
 - If a token is pasted into chat, **rotate it**  
-- Be careful what private memory is visible in shared group chats  
+- Be careful what personal memory is visible in shared group chats  
 
 Useful commands when available:
 
