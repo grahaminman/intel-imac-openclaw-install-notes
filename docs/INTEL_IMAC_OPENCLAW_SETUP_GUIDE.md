@@ -486,7 +486,6 @@ Reopen Terminal and test the commands again.
 
 - First installs can be slow. Leave them alone.  
 - Prefer prebuilt packages when Homebrew offers them.  
-- Do not install OpenCore to “fix” Homebrew.  
 
 ### C8. Checkpoint
 
