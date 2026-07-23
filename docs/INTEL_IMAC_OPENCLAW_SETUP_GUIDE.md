@@ -8,7 +8,7 @@
 |---|---|
 | **Status** | Generic shareable draft |
 | **Hardware focus** | Intel iMac class machines |
-| **OS focus** | Official Apple macOS releases suitable for your iMac (**no OpenCore**) |
+| **OS focus** | Official Apple macOS on a supported Intel iMac preferred; OpenCore possible but not taught here |
 | **Repo working title** | `intel-imac-openclaw-install` (rename before public launch) |
 
 ---
@@ -109,9 +109,10 @@ It **reads files** in the workspace. If something matters, write it down.
 
 ### 1.2 What this guide deliberately avoids
 
-- **OpenCore Legacy Patcher**  
-  Use an official macOS release supported on your Intel iMac.  
-  Do **not** install OpenCore just to follow this guide.
+- **OpenCore Legacy Patcher as a requirement for this guide**  
+  The install this guide is based on **can use OpenCore and work well**, but if you are not experienced at setting up machines it is **simpler to install without it** (official macOS on a supported Intel iMac).  
+  If you **do** use OpenCore, expect **extra steps** — especially around **storage volumes**, boot/mount reliability, and keeping large workspace/model disks available after reboot. This guide does not walk through OpenCore install or storage patching.  
+  Do **not** install OpenCore just because you are following this OpenClaw guide.
 - Exposing OpenClaw to the public internet on day one
 - Fancy multi-agent factories on day one
 - Paid extras you do not need yet
@@ -1239,7 +1240,7 @@ Either the workspace path changed, or the fact was never written into files.
 Force loopback (`127.0.0.1`), confirm the process is listening, avoid fancy hostnames first.
 
 ### Someone told you to install OpenCore for this
-Not part of this guide. Prefer stock macOS on supported hardware.
+Not required for this guide. The reference-style install can work with OpenCore, but unsupported OS patching adds complexity (including storage management). Prefer stock macOS on supported hardware unless you already know OpenCore well.
 
 ---
 
@@ -1333,7 +1334,7 @@ Optional useful context:
 11. Turn off expensive background loops  
 12. Write everything important into files  
 
-**No OpenCore. No public exposure. Verify after every stage.**
+**Prefer no OpenCore unless you already know it. No public exposure. Verify after every stage.**
 
 ---
 
