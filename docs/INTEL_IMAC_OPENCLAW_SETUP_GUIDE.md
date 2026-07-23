@@ -1,7 +1,7 @@
 # OpenClaw Setup Guide — Intel iMac (Generic)
 
 **Audience:** someone setting up OpenClaw who is not deeply technical  
-**Goal:** a working local OpenClaw “home base” with persistent memory, Telegram, and Discord  
+**Goal:** a working local OpenClaw “home base” with file-based persistent memory, Telegram, and Discord  
 **Style:** complete, careful, low drama — stop and verify at each stage
 
 | Field | Value |
@@ -71,12 +71,12 @@ Replace these with your own values. Explanatory notes are included where a value
 When finished, you should have:
 
 1. **OpenClaw Gateway** running in the background on this Mac  
-2. A **workspace folder** that acts as the AI’s long-term memory  
-3. **Obsidian** opened on that same folder (so you can browse the memory graph)  
-4. Chat access via **Telegram** and/or **Discord**  
-5. Model access via a cloud provider (this guide uses **xAI / Grok** as the example)  
-6. Optional but recommended: **Ollama** (local embeddings for memory search)  
-7. Optional: a local operator dashboard such as **Mission Control**
+2. A **workspace folder** of Markdown files that is OpenClaw’s real long-term memory  
+3. Chat access via **Telegram** and/or **Discord**  
+4. Model access via a cloud provider (this guide uses **xAI / Grok** as the example)  
+5. **Optional:** **Obsidian** opened on that same workspace folder (nicer browsing for *you*; not required for memory to work)  
+6. **Optional / recommended when the Mac can handle it:** **Ollama** for local embeddings and a simple local model fallback  
+7. **Optional:** a local operator dashboard such as **Mission Control**
 
 ### Mental model
 
@@ -86,13 +86,15 @@ You (Telegram / Discord / browser)
         ▼
  OpenClaw Gateway  (always-on local service)
         │
-        ├── reads workspace memory files
+        ├── reads workspace memory files  (this is persistent memory)
         ├── talks to your cloud model provider
         └── optional local tools (Ollama, scripts)
 ```
 
 **Important:** the AI does not magically “remember.”  
-It **reads files** in the workspace. If something matters, write it down.
+OpenClaw memory is **plain files in the workspace** (`MEMORY.md`, `memory/…`, and related notes). If something matters, write it down.
+
+**Obsidian is optional.** It does not create OpenClaw memory. It is a free app that can open the same folder so *you* can browse, search, and link notes more comfortably. OpenClaw works without it.
 
 ---
 
@@ -195,10 +197,11 @@ Set:
 | E | OpenClaw install + gateway | Yes | gateway status is running |
 | F | Workspace + identity files | Yes | core `.md` files exist |
 | G | Cloud model login | Yes | short chat reply works |
-| H | Persistent memory + Obsidian | Yes | vault opens; memory write/read test passes |
+| H | Persistent memory (workspace files) | Yes | memory write/read test passes |
+| H-opt | Obsidian (browse the same folder) | Optional | vault opens on workspace if you want it |
 | I | Telegram | Recommended | DM reply works |
 | J | Discord | Recommended | channel reply works |
-| K | Ollama embeddings | Strongly recommended | embeddings model listed |
+| K | Ollama (local models / fallback) | Recommended when hardware allows | Ollama runs, or you consciously skipped it |
 | L | Cost control | Recommended | no expensive surprise loop |
 | M | Mission Control | Optional | local browser UI works |
 | N | Extras | Optional later | skip until core is solid |
@@ -693,34 +696,24 @@ openclaw models auth login --provider xai --force
 
 ---
 
-## 10. Stage H — Persistent memory (OpenClaw + Obsidian)
+## 10. Stage H — Persistent memory (workspace files; Obsidian optional)
 
 ### H1. How memory actually works
 
+OpenClaw’s persistent memory is **built in**: Markdown files in the workspace folder. That is the source of truth.
+
+Typical pattern:
+
 1. You (or the assistant) write notes into workspace files  
-2. Next session, OpenClaw injects key files into context  
-3. Obsidian lets **you** browse/link those notes  
-4. Optional search tools help find old notes later  
+2. Next session, OpenClaw loads key bootstrap files (for example `AGENTS.md`, `SOUL.md`, `USER.md`, `MEMORY.md`)  
+3. Daily notes live under `memory/YYYY-MM-DD.md`  
+4. Optional search tools can help find older notes later  
 
 If it is only said in chat and never written down, it may be forgotten.
 
-### H2. Install Obsidian
+You can open those files with **any** editor (TextEdit, VS Code, Finder preview). That is enough for a working system.
 
-1. Download Obsidian from the official site: <https://obsidian.md>  
-2. Install the app  
-3. **Open folder as vault** → choose `<WORKSPACE_PATH>`
-
-One workspace = one vault. Avoid creating a second unrelated vault for the same notes.
-
-### H3. Enable Obsidian CLI if available
-
-```bash
-obsidian version
-```
-
-If CLI is unavailable, skip it; the vault still works.
-
-### H4. Recommended starter vault structure
+### H2. Recommended starter folder structure
 
 ```text
 <WORKSPACE_PATH>/
@@ -758,14 +751,7 @@ Simple `Home.md`:
 - Add notes under `second-brain/` as you go
 ```
 
-### H5. Optional later tools
-
-- Obsidian plugins such as Templater / Dataview  
-- Extra semantic search utilities  
-
-Not required for a working memory system.
-
-### H6. Memory test
+### H3. Memory test (required)
 
 In OpenClaw chat:
 
@@ -780,13 +766,50 @@ Start a fresh session/surface and ask:
 What is my test phrase?
 ```
 
-If it answers from the file, persistent memory is working.
+If it answers from the file, persistent memory is working. **You do not need Obsidian for this test.**
 
-### H7. Checkpoint
+### H4. Optional — Obsidian (human-friendly browser for the same files)
 
-- [ ] Obsidian opens `<WORKSPACE_PATH>`  
-- [ ] daily note + `MEMORY.md` in use  
+Install Obsidian only if you want a nicer way to browse and link notes.
+
+**What Obsidian is good for**
+
+- Comfortable reading/editing of the workspace  
+- Graph view and `[[wiki links]]` if you use them  
+- Daily-note plugins and other note-taking extras  
+
+**What Obsidian is not**
+
+- Not required for OpenClaw to remember anything  
+- Not a second memory database  
+- Not a substitute for writing facts into workspace files  
+
+If you want it:
+
+1. Download from the official site: <https://obsidian.md>  
+2. Install the app  
+3. **Open folder as vault** → choose `<WORKSPACE_PATH>`
+
+One workspace = one vault. Avoid creating a second unrelated vault for the same notes.
+
+Optional CLI check (skip if unavailable):
+
+```bash
+obsidian version
+```
+
+Later optional extras (plugins, extra search tools) are nice-to-have only.
+
+### H5. Checkpoint
+
+**Required**
+
+- [ ] `MEMORY.md` and `memory/` exist and are in use  
 - [ ] memory write/read test passed  
+
+**Optional**
+
+- [ ] Obsidian opens `<WORKSPACE_PATH>` if you chose to install it  
 
 ---
 
@@ -947,12 +970,40 @@ On smaller bots this can still be normal if the intent is enabled and channel re
 
 ---
 
-## 13. Stage K — Ollama (recommended for memory search)
+## 13. Stage K — Ollama (recommended when the Mac can handle it)
 
-You can chat with a cloud model without Ollama.  
-Ollama is still worth installing because local embeddings improve memory search.
+You can run a solid OpenClaw setup **without** Ollama. Cloud chat + workspace files already work.
 
-### K1. Install Ollama
+Ollama is still worth understanding, because it unlocks useful **local** capabilities when the machine is strong enough.
+
+### K0. Why Ollama is valuable (and when to skip it)
+
+**Good reasons to install it**
+
+1. **Better memory search** — a small local **embeddings** model helps OpenClaw find older notes by meaning, not only exact words  
+2. **Failover / degraded mode** — if your cloud AI login, API, or network fails, a small local chat model can still let the assistant reply in a limited way  
+3. **Cheap simple jobs** — light local tasks (some heartbeat-style checks, short summaries, routine classification) can use a small local model so you are not always spending cloud tokens  
+
+**When it may not be possible or not a good idea**
+
+- Low free disk (local models can be hundreds of MB to many GB each)  
+- Older / low-RAM Intel iMacs that become unusably slow when a chat model is loaded  
+- You only want the smallest working cloud setup first  
+- You are still fighting gateway / auth / Telegram / Discord issues — finish those before adding local models  
+
+**Rough hardware guidance (practical, not a hard rule)**
+
+| Machine class | Sensible Ollama plan |
+|---|---|
+| ~8 GB RAM | Often skip local chat models; embeddings-only may still be tight — prioritise cloud + files |
+| ~16 GB RAM | Embeddings usually fine; keep any local chat model **small** |
+| ~32 GB+ RAM (like the tested install) | Embeddings + a small local chat fallback is realistic |
+
+Always prefer a **small** local chat model for fallback. Large “smart” local models on older Intel Macs are often slow and frustrating.
+
+If you skip Ollama now, that is a valid choice. Come back later when the core system is stable.
+
+### K1. Install Ollama (if proceeding)
 
 Options:
 
@@ -970,20 +1021,56 @@ ollama --version
 Leave Ollama on its default location under your home/main volume.  
 You do **not** need a separate `/Volumes/...` models disk for this guide.
 
-### K3. Pull an embeddings model
+### K3. Pull an embeddings model first (best first local win)
 
 ```bash
 ollama pull nomic-embed-text
 ollama list
 ```
 
-Optional later local chat models can be large and slow on older Intel CPUs. Add them only if you need them.
+This is usually the highest-value, lowest-drama local piece for memory search.
 
-### K4. Checkpoint
+### K4. Optional — small local chat model for failover / simple jobs
+
+Only after embeddings work, and only if RAM/disk feel comfortable:
+
+```bash
+# Example only — pick a currently small model name from Ollama’s model library
+ollama pull <SMALL_LOCAL_CHAT_MODEL>
+ollama list
+```
+
+Then, using current OpenClaw docs/config for your version:
+
+- keep your **cloud model as the normal default**  
+- configure the small local model as a **fallback** and/or for light jobs if your OpenClaw version supports model failover / routing  
+- do **not** expect a tiny local model to match full cloud quality  
+
+Good uses for a small local model:
+
+- “Cloud is down, can you still answer simply?”  
+- short heartbeat-style checks  
+- tiny summarise / classify tasks  
+
+Poor uses on older Intel hardware:
+
+- long creative writing as the daily driver  
+- huge models that thrash disk and freeze the Mac  
+
+### K5. Checkpoint
+
+If you installed Ollama:
 
 - [ ] `ollama list` works  
 - [ ] embeddings model present  
-- [ ] models path recorded in `TOOLS.md`  
+- [ ] optional small chat model only if the Mac stays responsive  
+- [ ] cloud model remains your normal default  
+- [ ] notes recorded in `TOOLS.md`  
+
+If you skipped Ollama:
+
+- [ ] conscious skip (disk/RAM/priority) written in your notes  
+- [ ] core cloud chat + workspace memory still verified  
 
 ---
 
@@ -1127,8 +1214,7 @@ Do not block “done” on these:
 - [ ] Gateway running on localhost  
 - [ ] Workspace files created with your placeholders replaced  
 - [ ] Cloud model auth works; one successful chat  
-- [ ] Obsidian vault = workspace  
-- [ ] Memory write/read test passed  
+- [ ] Memory write/read test passed (workspace files — Obsidian not required)  
 - [ ] Telegram DM works **or** Discord channel works (both is better)  
 - [ ] Secrets stored privately  
 - [ ] Background jobs not quietly draining money  
@@ -1138,8 +1224,9 @@ Do not block “done” on these:
 Everything above, plus:
 
 - [ ] Both Telegram and Discord  
-- [ ] Ollama + embeddings model  
 - [ ] Daily note habit / `MEMORY.md` habit  
+- [ ] Obsidian opened on the workspace if you want visual browsing  
+- [ ] Ollama when hardware allows: embeddings + optional small local failover model  
 - [ ] Optional dashboard on loopback only  
 - [ ] Basic cron/jobs understood  
 
@@ -1234,7 +1321,7 @@ openclaw security audit --deep
 
 ### Midday
 - Stages F–G (workspace + model auth)
-- Stage H (Obsidian memory test)
+- Stage H (memory write/read test; Obsidian only if you want it)
 
 ### Afternoon
 - Stage I (Telegram)
@@ -1242,7 +1329,7 @@ openclaw security audit --deep
 - Stage L (cost control)
 
 ### Only if energy remains
-- Stage K (Ollama)
+- Stage K (Ollama — embeddings first; small local failover only if the Mac stays happy)
 - Stage M (Mission Control)
 
 If you only finish through one chat surface plus memory files, that is already a real system.
@@ -1291,11 +1378,12 @@ Optional useful context:
 5. Install OpenClaw and start gateway  
 6. Create workspace identity/memory files  
 7. Login cloud model provider  
-8. Open the workspace in Obsidian  
+8. Prove memory with a write/read test (Obsidian optional)  
 9. Connect Telegram  
 10. Connect Discord  
 11. Turn off expensive background loops  
-12. Write everything important into files  
+12. Optionally add Ollama (embeddings + small local failover if hardware allows)  
+13. Write everything important into files  
 
 **Prefer no OpenCore unless you already know it. No public exposure. Verify after every stage.**
 
